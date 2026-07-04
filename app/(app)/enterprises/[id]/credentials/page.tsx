@@ -2,10 +2,10 @@
 
 import { useParams } from 'next/navigation'
 import { useEnterprise } from '@/hooks/useEnterprises'
-import { SettingsCard, SabreStatusCard } from '@/components/enterprise/cards'
+import { SabreCard, ZentrumhubCard } from '@/components/enterprise/cards'
 import { Spinner } from '@/components/ui'
 
-export default function EnterpriseOverviewPage() {
+export default function EnterpriseCredentialsPage() {
   const { id } = useParams<{ id: string }>()
   const { data: ent, isLoading, isError, error } = useEnterprise(id)
 
@@ -18,8 +18,8 @@ export default function EnterpriseOverviewPage() {
 
   return (
     <div className="space-y-5">
-      <SettingsCard ent={ent} />
-      <SabreStatusCard id={ent.id} />
+      <SabreCard ent={ent} />
+      <ZentrumhubCard ent={ent} />
     </div>
   )
 }

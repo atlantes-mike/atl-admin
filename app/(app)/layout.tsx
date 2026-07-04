@@ -3,14 +3,13 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { Building2, Users, LogOut } from 'lucide-react'
+import { Building2, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { cn } from '@/lib/utils'
 
-const NAV = [
-  { href: '/enterprises', label: 'Enterprises', icon: Building2 },
-  { href: '/agents', label: 'Agents', icon: Users }
-]
+// Agents + Hotels are sub-resources of an enterprise (nested tabs), so the
+// top-level nav is just Enterprises.
+const NAV = [{ href: '/enterprises', label: 'Enterprises', icon: Building2 }]
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()

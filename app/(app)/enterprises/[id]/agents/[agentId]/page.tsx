@@ -9,11 +9,11 @@ import type { AccountRole, AccountStatus } from '@/lib/api/accounts'
 import { ALL_ROLES, ALL_STATUSES, statusTone } from '@/lib/agentDisplay'
 import { Badge, Button, Card, CardHeader, Field, Input, Select, Spinner } from '@/components/ui'
 
-export default function AgentDetailPage() {
-  const { id } = useParams<{ id: string }>()
+export default function EnterpriseAgentDetailPage() {
+  const { id: enterpriseId, agentId } = useParams<{ id: string; agentId: string }>()
   const router = useRouter()
-  const { data: acct, isLoading, isError, error } = useAccount(id)
-  const update = useUpdateAccount(id)
+  const { data: acct, isLoading, isError, error } = useAccount(agentId)
+  const update = useUpdateAccount(agentId)
   const del = useDeleteAccount()
 
   const [firstName, setFirstName] = useState('')
@@ -22,7 +22,6 @@ export default function AgentDetailPage() {
   const [roles, setRoles] = useState<AccountRole[]>([])
   const [status, setStatus] = useState<AccountStatus>('invited')
 
-  // Seed local form state once the account loads.
   useEffect(() => {
     if (!acct) return
     setFirstName(acct.firstName ?? '')
@@ -38,7 +37,6 @@ export default function AgentDetailPage() {
 
   function save() {
     if (roles.length === 0) return
-    // Guard the powerful, cross-tenant role behind an explicit confirmation.
     const grantingAdmin = roles.includes('atlantes_admin') && !(acct?.roles ?? []).includes('atlantes_admin')
     if (grantingAdmin && !window.confirm('Grant the cross-tenant atlantes_admin role? This gives full internal admin access.')) {
       return
@@ -48,12 +46,12 @@ export default function AgentDetailPage() {
 
   function onDelete() {
     if (!window.confirm('Soft-delete this agent? They will be removed from lists and unable to sign in.')) return
-    del.mutate(id, { onSuccess: () => router.push('/agents') })
+    del.mutate(agentId, { onSuccess: () => router.push(`/enterprises/${enterpriseId}/agents`) })
   }
 
   return (
-    <div className="mx-auto max-w-2xl p-8">
-      <Link href="/agents" className="mb-4 inline-flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800">
+    <div>
+      <Link href={`/enterprises/${enterpriseId}/agents`} className="mb-4 inline-flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800">
         <ArrowLeft className="h-4 w-4" /> Agents
       </Link>
 
@@ -64,7 +62,7 @@ export default function AgentDetailPage() {
         <div className="space-y-5">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-lg font-semibold text-stone-900">{acct.fullName || acct.email}</h1>
+              <h2 className="font-semibold text-stone-900">{acct.fullName || acct.email}</h2>
               <p className="text-xs text-stone-500">{acct.email}</p>
             </div>
             <Badge tone={statusTone(acct.status)}>{acct.status}</Badge>

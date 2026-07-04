@@ -113,3 +113,23 @@ export function updateCredentials(id: string, body: CredentialsUpdate) {
 export function getSabreStatus(id: string) {
   return apiRequest<{ data: SabreStatus }>(`/v1.0/enterprises/${id}/sabre-status`).then((r) => r.data)
 }
+
+export type EnterpriseHotel = {
+  id: string
+  hotelId: string
+  name: string | null
+  city: string | null
+  sabreCode: string | null
+  rateCodes: string[]
+}
+
+export function listEnterpriseHotels(
+  id: string,
+  params: { q?: string; skip?: number; limit?: number } = {}
+) {
+  const qs = new URLSearchParams()
+  if (params.q) qs.set('q', params.q)
+  if (params.skip != null) qs.set('skip', String(params.skip))
+  qs.set('limit', String(params.limit ?? 25))
+  return apiRequest<Paginated<EnterpriseHotel>>(`/v1.0/enterprises/${id}/hotels?${qs.toString()}`)
+}

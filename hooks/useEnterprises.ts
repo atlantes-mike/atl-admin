@@ -24,6 +24,15 @@ export function useSabreStatus(id: string) {
   })
 }
 
+export function useEnterpriseHotels(id: string, params: { q?: string; skip?: number; limit?: number }) {
+  return useQuery({
+    queryKey: ['enterprise-hotels', id, params],
+    queryFn: () => api.listEnterpriseHotels(id, params),
+    enabled: Boolean(id),
+    placeholderData: (prev) => prev // keep the current page visible while the next loads
+  })
+}
+
 export function useCreateEnterprise() {
   const qc = useQueryClient()
   return useMutation({
