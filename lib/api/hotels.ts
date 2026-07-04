@@ -30,9 +30,13 @@ export function listCatalogHotels(
   if (params.status) qs.set('status', params.status)
   if (params.skip != null) qs.set('skip', String(params.skip))
   qs.set('limit', String(params.limit ?? 25))
-  return apiRequest<Paginated<HotelSummary>>(`/v1.0/catalog/hotels?${qs.toString()}`)
+  return apiRequest<Paginated<HotelSummary>>(`/v1.0/rhotels?${qs.toString()}`)
 }
 
-export function getCatalogHotel(id: string) {
-  return apiRequest<{ data: HotelDetail }>(`/v1.0/catalog/hotels/${id}`).then((r) => r.data)
+// Detail reuses the canonical single-hotel load, which is JSON:API-shaped
+// ({ data: { id, attributes } }) — flatten to the raw fields the UI reads.
+export function getCatalogHotel(id: string): Promise<HotelDetail> {
+  return apiRequest<{ data: { id: string; attributes: Record<string, unknown> } }>(`/v1.0/rhotels/${id}`).then(
+    (r) => ({ id: r.data.id, ...r.data.attributes })
+  )
 }
