@@ -3,13 +3,16 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { Building2, LogOut } from 'lucide-react'
+import { Building2, Hotel, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { cn } from '@/lib/utils'
 
-// Agents + Hotels are sub-resources of an enterprise (nested tabs), so the
-// top-level nav is just Enterprises.
-const NAV = [{ href: '/enterprises', label: 'Enterprises', icon: Building2 }]
+// Enterprise agents live under the enterprise (nested tabs). Hotels here is the
+// global raw catalog (not per-enterprise links), so it's a top-level item.
+const NAV = [
+  { href: '/enterprises', label: 'Enterprises', icon: Building2 },
+  { href: '/hotels', label: 'Hotels', icon: Hotel }
+]
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
