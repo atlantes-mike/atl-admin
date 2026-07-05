@@ -123,6 +123,21 @@ export type EnterpriseHotel = {
   rateCodes: string[]
 }
 
+export type EnterpriseHotelLink = {
+  id: string
+  hotelId: string
+  enterprise: string
+  rateCodes: string[]
+  createdAt: string | null
+  modifiedAt: string | null
+}
+
+export function getEnterpriseHotel(enterpriseId: string, hotelId: string) {
+  return apiRequest<{ data: EnterpriseHotelLink }>(`/v1.0/enterprises/${enterpriseId}/hotels/${hotelId}`).then(
+    (r) => r.data
+  )
+}
+
 export function listEnterpriseHotels(
   id: string,
   params: { q?: string; skip?: number; limit?: number } = {}

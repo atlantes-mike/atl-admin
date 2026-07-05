@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEnterpriseHotels } from '@/hooks/useEnterprises'
 import { Badge, Card, Input, Button, Spinner } from '@/components/ui'
@@ -50,7 +51,11 @@ export default function EnterpriseHotelsPage() {
           <div className="py-12 text-center text-sm text-stone-500">No hotels linked to this enterprise.</div>
         )}
         {rows.map((hotel) => (
-          <div key={hotel.id} className="flex items-start justify-between gap-4 border-b border-stone-100 px-5 py-3.5 last:border-0">
+          <Link
+            key={hotel.id}
+            href={`/enterprises/${id}/hotels/${hotel.hotelId}`}
+            className="flex items-start justify-between gap-4 border-b border-stone-100 px-5 py-3.5 last:border-0 hover:bg-stone-50"
+          >
             <div className="min-w-0">
               <div className="truncate font-medium text-stone-900">{hotel.name ?? '(unnamed)'}</div>
               <div className="mt-0.5 flex items-center gap-2 text-xs text-stone-500">
@@ -72,7 +77,7 @@ export default function EnterpriseHotelsPage() {
                 <span className="text-xs text-stone-400">no rate codes</span>
               )}
             </div>
-          </div>
+          </Link>
         ))}
       </Card>
 
